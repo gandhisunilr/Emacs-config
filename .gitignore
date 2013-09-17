@@ -1,4 +1,4 @@
-addefs.el
+auto-save-list/*
 temp-files/*
 logs/*
 backups/*
