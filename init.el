@@ -6,6 +6,8 @@
 ;; Key settings
 (global-set-key [C-tab] 'next-multiframe-window)
 (global-set-key (kbd "C-z") 'undo)
+(global-set-key (kbd "C-.") 'hs-hide-block)
+(global-set-key (kbd "C-,") 'hs-show-block)
 
 ;; Org Mode
 (add-to-list 'load-path "~/.emacs.d/packages/org-mode")
@@ -42,6 +44,17 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(defcustom magit-use-highlights nil
+  "Use highlights in diff buffer."
+  :group 'magit
+  :type 'boolean)
+
+(defun magit-highlight-section ()
+  (let ((section (magit-current-section)))
+    (when (not (eq section magit-highlighted-section))
+      (when (and (not (eq section magit-highlighted-section))
+                 magit-use-highlights)))))
+
 
 ;;  Auto complete
 (add-to-list 'load-path "~/.emacs.d/packages/auto-complete")
@@ -57,10 +70,7 @@
 (add-to-list 'load-path "~/.emacs.d/matlab-emacs")
 (require 'matlab-load)
 (matlab-cedet-setup)
-(add-hook 'matlab-mode
-          (lambda ()
-            (auto-complete-mode 1)
-            ))
+(add-to-list 'ac-modes 'matlab-mode)
 (provide 'init-matlab)
 
 (setq matlab-indent-function-body t)  ; if you want function bodies indented
@@ -74,3 +84,16 @@
 (setq matlab-shell-command-switches '("-nodesktop")) 
 (setq matlab-shell-command "/usr/local/MATLAB/R2012a/bin/matlab")
 
+;; Code Folding
+(autoload 'hideshowvis-enable "hideshowvis" "Highlight foldable regions")
+(autoload 'hideshowvis-minor-mode
+  "hideshowvis"
+  "Will indicate regions foldable with hideshow in the fringe."
+  'interactive)
+(add-hook 'emacs-lisp-mode-hook
+            '(lambda () (unless (equal "*scratch*" (buffer-name))
+                          (hideshowvis-enable))))
+(dolist (hook (list 'emacs-lisp-mode-hook
+                    'c++-mode-hook))
+  (add-hook hook 'hideshowvis-enable))
+(hideshowvis-symbols)
