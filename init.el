@@ -6,8 +6,8 @@
 ;; Key settings
 (global-set-key [C-tab] 'next-multiframe-window)
 (global-set-key (kbd "C-z") 'undo)
-(global-set-key (kbd "C-.") 'hs-hide-block)
-(global-set-key (kbd "C-,") 'hs-show-block)
+(global-set-key (kbd "C-,") 'hs-hide-block)
+(global-set-key (kbd "C-.") 'hs-show-block)
 
 ;; Org Mode
 (add-to-list 'load-path "~/.emacs.d/packages/org-mode")
@@ -43,7 +43,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:inherit nil :stipple nil :background "#242424" :foreground "#f6f3e8" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 130 :width extra-expanded :foundry "unknown" :family "Ubuntu Mono"))))
+ '(hl-line ((t (:inherit highlight :underline nil)))))
 (defcustom magit-use-highlights nil
   "Use highlights in diff buffer."
   :group 'magit
@@ -69,7 +70,6 @@
 ;; Matlab Mode
 (add-to-list 'load-path "~/.emacs.d/matlab-emacs")
 (require 'matlab-load)
-(matlab-cedet-setup)
 (add-to-list 'ac-modes 'matlab-mode)
 (provide 'init-matlab)
 
@@ -97,3 +97,14 @@
                     'c++-mode-hook))
   (add-hook hook 'hideshowvis-enable))
 (hideshowvis-symbols)
+
+;; CEDET
+(load-file "~/.emacs.d/packages/cedet/common/cedet.el")
+(global-ede-mode 1)                      ; Enable the Project management system
+(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
+(global-srecode-minor-mode 1)            ; Enable template insertion menu
+(load-file "~/.emacs.d/packages/semantic-tag-folding.el")
+(require 'semantic-tag-folding)
+(global-semantic-tag-folding-mode 1)
+(global-set-key (kbd "C-<left>") 'semantic-tag-folding-fold-block)
+(global-set-key (kbd "C-<right>") 'semantic-tag-folding-show-block)
